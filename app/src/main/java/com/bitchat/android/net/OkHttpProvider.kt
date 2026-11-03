@@ -68,6 +68,11 @@ object OkHttpProvider {
 
     private fun baseBuilderForCurrentProxy(): Pair<OkHttpClient.Builder, Route> {
         val builder = OkHttpClient.Builder()
+        // Margey : aucune liaison Internet pour le code d'origine (Nostr, Tor, aperçus, géocodage...).
+        // Seule la mise à jour (com.maigus.margey.update) lit ayneha.org, sans passer par ici.
+        if (com.bitchat.android.util.AppConstants.MARGEY_OFFLINE_ONLY) {
+            builder.addInterceptor { throw java.io.IOException("Margey : hors ligne") }
+        }
         val torProvider = ArtiTorManager.getInstance()
         val socks: InetSocketAddress? = torProvider.currentSocksAddress()
         // If a SOCKS address is defined, always use it. TorProvider sets this as soon as Tor mode is ON,

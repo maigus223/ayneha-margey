@@ -32,7 +32,10 @@ Voir PRIVACY_POLICY.md. Le README d'origine de bitchat est conservé dans docs/b
 - Partage de l'application de téléphone à téléphone, et apprentissage de l'AYNEHA (en français ou en anglais).
 
 - Nom du paquet : com.maigus.aynehamargey, nom affiché : Margey.
-- Aucune autorisation Internet : Nostr, Tor et les relais sont neutralisés (AppConstants.MARGEY_OFFLINE_ONLY).
+- Messages jamais par Internet : Nostr, Tor et les relais sont neutralisés (AppConstants.MARGEY_OFFLINE_ONLY,
+  et tout appel HTTP du code d'origine est bloqué dans OkHttpProvider). Seule exception : tirer la liste des
+  discussions vers le bas cherche une mise à jour sur https://ayneha.org/mises-a-jour.json (identifiant
+  ayneha-margey, empreinte SHA-256 vérifiée, installation confirmée par l'utilisateur).
 - Toute l'interface est réécrite en AYNEHA, affichée de droite à gauche (paquet com.maigus.margey) :
   Discussions, Autour de moi, Salons, Réglages, Contact par QR, Partage en image, Confidentialité.
 - Clavier AYNEHA intégré (10-10-7, variantes par appui long, page des chiffres).

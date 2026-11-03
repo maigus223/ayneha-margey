@@ -45,6 +45,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -239,14 +240,17 @@ private fun DiscussionsScreen(viewModel: ChatViewModel, go: (Route) -> Unit) {
         Spacer(Modifier.height(8.dp))
         AlertsBanner(viewModel.nickname.collectAsStateWithLifecycle().value)
         GroupsSection(go)
+        val pull = com.maigus.margey.update.rememberPullToUpdate()
         if (conversations.isEmpty() && groups.isEmpty()) {
-            Column(Modifier.fillMaxSize().padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                AyText(Ay.D03, size = 22.sp, align = TextAlign.Center)
-                Spacer(Modifier.height(8.dp))
-                AyText(Ay.D04, size = 18.sp, color = M.Muted, align = TextAlign.Center)
-            }
+            LazyColumn(Modifier.fillMaxSize().nestedScroll(pull)) { item {
+                Column(Modifier.fillParentMaxSize().padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                    AyText(Ay.D03, size = 22.sp, align = TextAlign.Center)
+                    Spacer(Modifier.height(8.dp))
+                    AyText(Ay.D04, size = 18.sp, color = M.Muted, align = TextAlign.Center)
+                }
+            } }
         } else {
-            LazyColumn(Modifier.fillMaxSize()) {
+            LazyColumn(Modifier.fillMaxSize().nestedScroll(pull)) {
                 items(conversations, key = { it.conversationID }) { c ->
                     Row(
                         Modifier.fillMaxWidth().clickable { go(Route.Chat(c.connectedPeerID ?: c.conversationID, c.displayName)) }

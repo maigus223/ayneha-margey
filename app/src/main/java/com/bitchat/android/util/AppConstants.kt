@@ -6,7 +6,7 @@ import java.util.UUID
  * Centralized application-wide constants.
  */
 object AppConstants {
-    /** AYNEHA Margey : aucune liaison Internet (ni Nostr, ni Tor, ni mise à jour en ligne). */
+    /** Margey : aucune liaison Internet (ni Nostr, ni Tor) ; seule exception : la mise à jour depuis ayneha.org. */
     const val MARGEY_OFFLINE_ONLY: Boolean = true
 
     // Packet time-to-live (hops)

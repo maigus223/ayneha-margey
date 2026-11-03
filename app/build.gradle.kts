@@ -34,8 +34,8 @@ android {
         applicationId = "com.maigus.aynehamargey"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 10200   // Margey : majeur*10000 + mineur*100 + correctif
+        versionName = "1.2.0"
         buildConfigField(
             "String",
             "GITHUB_RELEASE_CERT_SHA256",

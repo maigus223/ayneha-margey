@@ -106,6 +106,18 @@ class MargeyScreenshotTest {
         val joined = salonSample()
         shoot("16_salon_code_ay") { MargeyTheme { androidx.compose.foundation.layout.Box(Modifier.fillMaxSize().background(M.Night)) { SalonsContent(joined, { "Maïgus" }, { _, _ -> }, {}, startPanel = 2) } } }
     }
+    private fun voiceShot(name: String, maxMs: Long, elapsed: Long, locked: Boolean) {
+        M.themeMode = 2; com.maigus.margey.text.Lang.current = 1; Kb.ayneha = false
+        val ctx = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>()
+        VoiceUi.setForTest(VoiceUi.Session(com.bitchat.android.features.voice.VoiceRecorder(ctx), maxMs) {}.apply {
+            this.elapsed = elapsed; this.locked = locked; drag = if (locked) 0f else 0.5f })
+        shoot(name) { MargeyTheme { androidx.compose.foundation.layout.Column(Modifier.fillMaxSize().background(M.Night)) {
+            androidx.compose.foundation.layout.Spacer(Modifier.weight(1f)); Composer(extra = { PhotoButton {} }, maxVoiceMs = maxMs, onVoice = {}) {} } } }
+        VoiceUi.setForTest(null)
+        com.maigus.margey.text.Lang.current = 0; Kb.ayneha = true
+    }
+    @Test fun voiceHeld() = voiceShot("17_vocal_maintenu", 60_000L, 12_000L, false)
+    @Test fun voiceLocked() = voiceShot("18_vocal_mains_libres", 30_000L, 28_500L, true)
     @Test fun bluetooth() { M.themeMode = 2; shoot("03_bluetooth") { MargeyBluetoothScreen {} } }
 
     private fun msg(text: String, sender: String) = BitchatMessage(sender = sender, content = text, timestamp = Date(1_761_480_000_000))

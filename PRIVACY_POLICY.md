@@ -2,7 +2,7 @@
 
 ## AYNEHA Margey ne collecte aucune donnée.
 
-Pas de compte, pas de numéro de téléphone, pas de serveur, pas de publicité, pas de traceur. L'application n'a même pas l'autorisation d'accéder à Internet : tout reste sur ton téléphone.
+Pas de compte, pas de numéro de téléphone, pas de serveur, pas de publicité, pas de traceur. Les messages ne passent jamais par Internet : tout reste sur ton téléphone. Margey ne se connecte à Internet que pour une chose, quand tu le demandes : chercher une nouvelle version (voir « Mises à jour »).
 
 ## Ton identité
 
@@ -26,7 +26,11 @@ On entre dans un groupe uniquement en scannant son code QR d'invitation : ne le 
 
 ## Les autorisations
 
-Bluetooth et appareils à proximité : trouver les téléphones proches, envoyer et relayer les messages. Wi-Fi (sans Internet) : liaison directe entre téléphones compatibles. Localisation : exigée par Android sur certains téléphones pour la recherche Bluetooth ; AYNEHA Margey n'enregistre ni n'envoie jamais ta position. Caméra : scanner un code QR, uniquement quand tu le demandes. Micro : messages vocaux, uniquement pendant l'enregistrement. Notifications : t'avertir d'un nouveau message.
+Bluetooth et appareils à proximité : trouver les téléphones proches, envoyer et relayer les messages. Wi-Fi : liaison directe entre téléphones compatibles. Internet : uniquement pour chercher une mise à jour sur ayneha.org quand tu le demandes, et pour la liaison Wi-Fi directe entre téléphones. Installation d'applications : installer une mise à jour téléchargée, toujours après ta confirmation. Localisation : exigée par Android sur certains téléphones pour la recherche Bluetooth ; AYNEHA Margey n'enregistre ni n'envoie jamais ta position. Caméra : scanner un code QR, uniquement quand tu le demandes. Micro : messages vocaux, uniquement pendant l'enregistrement. Notifications : t'avertir d'un nouveau message.
+
+## Mises à jour
+
+Tire la liste des discussions vers le bas : Margey lit sur ayneha.org le numéro de la dernière version. Si elle est plus récente, tu peux la télécharger ; son empreinte est vérifiée, puis Android te demande de confirmer l'installation. Aucune donnée personnelle n'est envoyée, et rien ne se passe si tu ne tires pas la liste.
 
 ## Partage en image
 

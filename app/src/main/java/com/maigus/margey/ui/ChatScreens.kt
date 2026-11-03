@@ -96,18 +96,21 @@ fun AyField(text: String, placeholder: String, modifier: Modifier = Modifier, bg
 
 /** Zone de rédaction + clavier AYNEHA, partagée par les conversations et les salons. */
 @Composable
-fun Composer(extra: @Composable () -> Unit = {}, onSend: (String) -> Unit) {
+fun Composer(extra: @Composable () -> Unit = {}, maxVoiceMs: Long = 0L, onVoice: ((String) -> Unit)? = null, onSend: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     var showKeyboard by remember { mutableStateOf(true) }
     Column {
+        VoiceRecordingBar()
         Row(
             Modifier.fillMaxWidth().background(M.Bar).padding(horizontal = 10.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AyField(text, Ay.C04, Modifier.weight(1f), onKeyboard = { showKeyboard = !showKeyboard }) { showKeyboard = true }
-            extra()
-            Box(
+            if (VoiceUi.session == null) extra()
+            // Comme WhatsApp : micro tant que le champ est vide, flèche d'envoi dès qu'on écrit
+            if (onVoice != null && text.isBlank()) MicButton(maxVoiceMs, 48, onVoice)
+            else Box(
                 Modifier.size(48.dp).clip(CircleShape).background(M.Orange).clickable {
                     val t = text.trim()
                     if (t.isNotEmpty()) { onSend(t); text = "" }
@@ -206,19 +209,17 @@ fun ChatScreen(viewModel: ChatViewModel, peerID: String, title: String, onBack: 
         LazyColumn(Modifier.weight(1f).padding(horizontal = 14.dp), state = listState, verticalArrangement = Arrangement.spacedBy(10.dp)) {
             items(messages, key = { it.id }) { m ->
                 val out = m.sender == nickname
-                Bubble(m, out, onLongPress = { shareMsg = m })
+                Bubble(m, out, onLongPress = { if (m.type == com.bitchat.android.model.BitchatMessageType.Message) shareMsg = m })
             }
         }
         // Messages différés : en attente tant que le destinataire ne les a pas reçus
         if (!isHere && messages.any { com.maigus.margey.features.PendingOutbox.isPending(it, nickname) }) {
             AyText(fill(Ay.N22, nom = title), size = 15.sp, color = M.Muted2, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp))
         }
-        Composer(extra = {
-            MediaButtons(maxVoiceMs = 60_000L, imageMaxDim = 1024,
-                onImage = { path -> viewModel.sendImageNote(peerID, null, path) },
-                onVoice = { path -> viewModel.sendVoiceNote(peerID, null, path) }
-            )
-        }) { viewModel.sendMessage(it) }
+        Composer(
+            extra = { PhotoButton(1024) { path -> viewModel.sendImageNote(peerID, null, path) } },
+            maxVoiceMs = 60_000L, onVoice = { path -> viewModel.sendVoiceNote(peerID, null, path) }
+        ) { viewModel.sendMessage(it) }
     }
     shareMsg?.let { m ->
         ShareSheet(message = m.content, pseudo = nickname, onDismiss = { shareMsg = null }, onShareImage = {
@@ -322,11 +323,10 @@ fun SalonScreen(viewModel: ChatViewModel, channel: String, onBack: () -> Unit) {
                 Icon(Icons.Filled.Block, null, tint = M.Red, modifier = Modifier.size(22.dp))
                 AyText(if (tata.isExcluded(channel, myFp)) fill(Ay.T03, nom = nickname) else Ay.S14, size = 19.sp, color = M.Muted, modifier = Modifier.weight(1f))
             }
-            else -> Composer(extra = {
-                MediaButtons(maxVoiceMs = 30_000L, imageMaxDim = 720,
-                    onImage = { tata.sendMedia(channel, nickname, "image", it) },
-                    onVoice = { tata.sendMedia(channel, nickname, "audio", it) })
-            }) { tata.send(channel, nickname, it) }
+            else -> Composer(
+                extra = { PhotoButton(720) { tata.sendMedia(channel, nickname, "image", it) } },
+                maxVoiceMs = 30_000L, onVoice = { tata.sendMedia(channel, nickname, "audio", it) }
+            ) { tata.send(channel, nickname, it) }
         }
     }
 }

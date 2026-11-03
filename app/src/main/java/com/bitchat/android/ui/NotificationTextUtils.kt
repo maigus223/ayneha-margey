@@ -18,8 +18,9 @@ object NotificationTextUtils {
     fun buildPrivateMessagePreview(message: BitchatMessage): String {
         return try {
             when (message.type) {
-                BitchatMessageType.Image -> "📷 sent an image"
-                BitchatMessageType.Audio -> "🎤 sent a voice message"
+                // Margey : notification en français (anglais si choisi), la police AYNEHA n'y est pas
+                BitchatMessageType.Image -> "📷 Photo"
+                BitchatMessageType.Audio -> if (com.maigus.margey.text.Lang.current == com.maigus.margey.text.Lang.EN) "🎤 Voice message" else "🎤 Message vocal"
                 BitchatMessageType.File -> {
                     // Show just the filename (not the full path)
                     val name = try { java.io.File(message.content).name } catch (_: Exception) { null }

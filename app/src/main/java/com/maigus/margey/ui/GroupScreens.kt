@@ -71,7 +71,7 @@ fun GroupsSection(go: (Route) -> Unit) {
                 GroupBadge()
                 Column(Modifier.weight(1f)) {
                     AyText(g.name, size = 22.sp, maxLines = 1)
-                    AyText(last?.let { it.sender + " : " + it.text } ?: fill(Ay.K05, n = g.members.size), size = 18.sp, color = M.Muted, maxLines = 1)
+                    AyText(last?.let { it.sender + " : " + when (it.media) { "image" -> "📷 " + Ay.N03; "audio" -> "🎤 " + Ay.D12; else -> it.text } } ?: fill(Ay.K05, n = g.members.size), size = 18.sp, color = M.Muted, maxLines = 1)
                 }
                 if (last != null) AyText(ayTime(last.timestamp), size = 15.sp, color = M.Muted2)
             }
@@ -233,11 +233,10 @@ fun GroupScreen(viewModel: ChatViewModel, groupId: String, onBack: () -> Unit) {
                 onClose = { showMembers = false }
             )
             deleteId != null -> DeleteMinePanel(onDelete = { GroupStore.deleteMine(g, deleteId!!); deleteId = null }, onCancel = { deleteId = null })
-            else -> Composer(extra = {
-                MediaButtons(maxVoiceMs = 60_000L, imageMaxDim = 800,
-                    onImage = { GroupStore.sendMedia(g, viewModel.nickname.value, "image", it) },
-                    onVoice = { GroupStore.sendMedia(g, viewModel.nickname.value, "audio", it) })
-            }) { GroupStore.send(g, viewModel.meshServiceFacade, myFp, viewModel.nickname.value, it) }
+            else -> Composer(
+                extra = { PhotoButton(800) { GroupStore.sendMedia(g, viewModel.nickname.value, "image", it) } },
+                maxVoiceMs = 60_000L, onVoice = { GroupStore.sendMedia(g, viewModel.nickname.value, "audio", it) }
+            ) { GroupStore.send(g, viewModel.meshServiceFacade, myFp, viewModel.nickname.value, it) }
         }
     }
 }

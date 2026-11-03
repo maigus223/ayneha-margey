@@ -102,6 +102,7 @@ fun AlertSender(nickname: String) {
                 // Alerte vocale : maintenir le micro pour parler (60 secondes au plus)
                 MediaButtonsVoiceOnly(Alerts.VOICE_MAX_MS) { voice = it; confirm = false }
             }
+            VoiceRecordingBar()
             voice?.let { v -> Box(Modifier.clip(RoundedCornerShape(12.dp)).background(M.Sand).padding(8.dp)) { AudioContent(v) } }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Box(

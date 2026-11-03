@@ -176,6 +176,9 @@ private fun isNostrConversationKey(value: String): Boolean =
 
 private fun BitchatMessage.conversationPreview(): String {
     val preview = when (type) {
+        // Margey : jamais le chemin du fichier, seulement « Photo » ou « Message vocal »
+        BitchatMessageType.Image -> "📷 " + com.maigus.margey.text.Ay.N03
+        BitchatMessageType.Audio -> "🎤 " + com.maigus.margey.text.Ay.D12
         BitchatMessageType.File -> content
             .substringAfterLast('/')
             .substringAfterLast('\\')

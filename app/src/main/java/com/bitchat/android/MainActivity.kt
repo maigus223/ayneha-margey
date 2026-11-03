@@ -172,6 +172,17 @@ class MainActivity : OrientationAwareActivity() {
                 }
             }
         }
+
+        // Margey : mise à jour depuis ayneha.org en tirant la liste des discussions vers le bas
+        maj = com.maigus.margey.update.MiseAJourUi(
+            this,
+            accent = 0xFFF07D22.toInt(),
+            fond = 0xFF0E1A30.toInt(),
+            encre = 0xFFF5EDDF.toInt(),
+            police = runCatching { androidx.core.content.res.ResourcesCompat.getFont(this, R.font.ayneha) }.getOrNull(),
+            geste = false
+        )
+        com.maigus.margey.update.MiseAJourUi.courant = maj
         
         // Collect state changes in a lifecycle-aware manner
         lifecycleScope.launch {
@@ -728,8 +739,11 @@ class MainActivity : OrientationAwareActivity() {
         }
     }
     
+    private var maj: com.maigus.margey.update.MiseAJourUi? = null
+
     override fun onResume() {
         super.onResume()
+        maj?.let { com.maigus.margey.update.MiseAJourUi.courant = it; it.surReprise() }
         // Revoke stale live-location work before any resumed UI can use cached channels.
         LocationChannelManager.getInstance(applicationContext).syncPermissionState()
 
@@ -846,6 +860,7 @@ class MainActivity : OrientationAwareActivity() {
     
     override fun onDestroy() {
         super.onDestroy()
+        if (com.maigus.margey.update.MiseAJourUi.courant === maj) com.maigus.margey.update.MiseAJourUi.courant = null
         
         try { unregisterReceiver(forceFinishReceiver) } catch (_: Exception) { }
         
